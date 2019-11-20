@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  head
+    title= title
+  body(onload='init(#{id}, #{latestId})')
+    h1= title
+
+    // Wrapper
+    #wrapper
+
+      // Comic
+      h2 #{comTitle}
+      h3 #{date}
+      img(src='#{imgLink}')
+      #controller
+      #transcript
+        h3 Transcript
+        p(align='center') !{transcript}
+
+
+  // /Wrapper
