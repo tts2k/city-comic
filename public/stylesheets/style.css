@@ -1,20 +1,42 @@
-/* Color definitions. Taken from Tomorrow Night scheme: 
-https://github.com/chriskempson/tomorrow-theme */
+/* Color definitions. Taken from boostrap scheme:  */
 :root { 
-  --color-bg: #1d1f21;
-  --color-fg: #c5c8c6;
-  --color-select: #373b41;
-  --color-red: #cc6666;
-  --color-green: #b5bd68;
-  --color-blue: #81a2be;
+  --color-bg: #f7f7f7;
+  --color-fg: #292b2c;
+  --color-select: #6c757d;
+  --color-red: #dc3545;
+  --color-green: #28a745;
+  --color-blue: #007bff;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background-color: var(--color-bg);
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: var(--color-fg);
   text-align: center;
+}
+
+nav {
+  text-align: left;
+  background-color: var(--color-fg);
+  color: var(--color-bg);
+  padding: 20px 20px;
+}
+
+#logo {
+  font-size: 22px;
+  font-family: Oswald;
+}
+
+#logo > span {
+  font-family: Caveat;
+  color: var(--color-blue);
+  font-size: 28px;
+}
+
+img {
+  max-width: 100%;
 }
 
 a {
@@ -25,8 +47,8 @@ input {
   border: none;
   color: var(--color-bg);
   background-color: var(--color-blue);
-  margin: 2% 1%;
-  font-size: 16px;
+  margin: 3% 2%;
+  font-size: 20px;
   padding: 3px 12px;
   border: 1px solid var(--color-select);
   transition: background-color 0.5s ease;
@@ -38,11 +60,28 @@ input:hover {
   border: 1px solid var(--color-fg);
 }
 
+#transcript {
+  text-align: center;
+}
+
 #transcript p {
+  display: inline-block;
   background-color: var(--color-select);
   border: 1px solid var(--color-fg);
   margin: 0 0;
   text-align: left;
   padding: 10px 10px;
-  font-family: 'Courier New', Courier, monospace
+  font-family: 'Courier New', Courier, monospace;
+  width: 60%;
+  color: var(--color-bg);
+}
+
+@media only screen and (max-width: 1000px) {
+  body {
+    padding: 0 0;
+  }
+
+  #transcript p {
+    width: 90%;
+  }
 }
