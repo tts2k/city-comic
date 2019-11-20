@@ -37,6 +37,11 @@ async function getLatestComic() {
 router.get('/', async function(req, res) {
   let data = await getLatestComic();
 
+  if (data.transcript === "")
+    transcript = "There's no official transcript for this comic strip.";
+  else
+    transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
+
   res.render('index', {
     title: 'xkcd #' + data.num,
     comTitle: data.title,
