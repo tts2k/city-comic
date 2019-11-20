@@ -1,11 +1,14 @@
-/* Color definitions. Taken from boostrap scheme:  */
+/* Color definitions. Taken from boostrap scheme:  
+* https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss
+*/
 :root { 
-  --color-bg: #f7f7f7;
+  --color-bg: #f8f9fa;
   --color-fg: #292b2c;
   --color-select: #6c757d;
   --color-red: #dc3545;
   --color-green: #28a745;
   --color-blue: #007bff;
+  --color-grey: #dee2e6;
 }
 
 body {
@@ -70,14 +73,12 @@ input:hover {
 
 #transcript p {
   display: inline-block;
-  background-color: var(--color-select);
-  border: 1px solid var(--color-fg);
+  background-color: var(--color-grey);
   margin: 0 0;
   text-align: left;
   padding: 10px 10px;
   font-family: 'Courier New', Courier, monospace;
   width: 60%;
-  color: var(--color-bg);
 }
 
 @media only screen and (max-width: 1000px) {
