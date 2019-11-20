@@ -35,6 +35,10 @@ nav {
   font-size: 28px;
 }
 
+#wrapper {
+  margin: 15px;
+}
+
 img {
   max-width: 100%;
 }
