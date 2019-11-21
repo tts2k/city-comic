@@ -11,13 +11,25 @@
   --color-grey: #dee2e6;
 }
 
+html {
+  height: 100%;
+}
+
 body {
+  min-height: 100%;
+  position: relative;
   margin: 0;
   padding: 0;
   background-color: var(--color-bg);
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: var(--color-fg);
   text-align: center;
+}
+
+body::after {
+  content:'';
+  display: block;
+  height: 100px;
 }
 
 nav {
@@ -82,10 +94,10 @@ input:hover {
 }
 
 footer {
-  position: fixed;
-  left: 0;
   bottom: 0;
+  position: absolute;
   width: 100%;
+  height: 30px;
   padding: 8px 0;
   line-height: 1.4;
   background-color: var(--color-fg);
