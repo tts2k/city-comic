@@ -37,13 +37,12 @@ async function getLatestComic() {
 /* GET home page. */
 router.get('/', async function(req, res) {
   let data = await getLatestComic();
+  const client = await pool.connect();
   try {
     if (data.transcript === "")
       transcript = "There's no official transcript for this comic strip.";
     else
       transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
-
-    const client = await pool.connect();
 
     let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0');
     let query = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
@@ -69,6 +68,7 @@ router.get('/', async function(req, res) {
 router.get('/:id([0-9]+)', async function(req, res) {
   const id = parseInt(req.params.id);
   const url = new URL('https://xkcd.com/' + id + '/info.0.json');
+  const client = await pool.connect();
   try {
     let data = await getJson(url);
     
@@ -79,7 +79,6 @@ router.get('/:id([0-9]+)', async function(req, res) {
       transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
     let latest = await getLatestComic();
 
-    const client = await pool.connect();
     let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", id);
     console.log(query);
 
@@ -97,7 +96,7 @@ router.get('/:id([0-9]+)', async function(req, res) {
   catch (e) {
     res.render('error', {
       error: {status: 404},
-      message: error.message
+      message: e.message
     });
     return;
   } 
