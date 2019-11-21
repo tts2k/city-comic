@@ -1,3 +1,4 @@
+var createError = require('http-errors')
 var express = require('express');
 var router = express.Router();
 const fetch = require('node-fetch');
@@ -22,7 +23,7 @@ async function getJson(url, params = {}) {
   });
 
   if (response.status === 404) {
-    throw new Error("Not found");
+    throw new Error(404);
   }
 
   return await response.json();
@@ -57,7 +58,14 @@ router.get('/', async function(req, res) {
     });
   }
   catch (e) {
-    throw new Error(update.message);
+    if (parseInt(e.message) === 404)
+      error = createError(404, "Not found");
+    else
+      error = createError(500, "Internal server error");
+
+    res.render('error', {
+      error: error,
+    });
   }
   finally {
     client.release();
@@ -103,11 +111,15 @@ router.get('/:id([0-9]+)', async function(req, res) {
     });
   }
   catch (e) {
+    var error = {};
+    if (parseInt(e.message) === 404)
+      error = createError(404, "Not found");
+    else
+      error = createError(500, "Internal server error");
+
     res.render('error', {
-      error: {status: 404},
-      message: e.message
+      error: error,
     });
-    return;
   } 
   finally {
     client.release();
