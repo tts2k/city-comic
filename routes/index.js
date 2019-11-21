@@ -20,8 +20,7 @@ async function getJson(url, params = {}) {
   });
 
   if (response.status === 404) {
-    res.sendStatus(404);
-    return;
+    throw new Error("Not found");
   }
 
   return await response.json();
@@ -57,7 +56,18 @@ router.get('/:id([0-9]+)', async function(req, res) {
   const id = parseInt(req.params.id);
   const url = new URL('https://xkcd.com/' + id + '/info.0.json');
 
-  let data = await getJson(url);
+  var data = {};
+  try {
+    data = await getJson(url);
+  }
+  catch (error) {
+    res.render('error', {
+      error: {status: 404},
+      message: error.message
+    });
+    return;
+  }
+
   var transcript = '';
   if (data.transcript === "")
     transcript = "There's no official transcript for this comic strip.";

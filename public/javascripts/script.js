@@ -5,9 +5,11 @@ let controllerDiv = document.getElementById('controller');
 function init(currentId, latestId) {
     comicId = parseInt(currentId);
     latest = parseInt(latestId);
+    createBtnFirst();
     createBtnPrev();
     createBtnRand();
     createBtnNext();
+    createBtnLast();
 }
 
 function createBtn(value, func, id) {
@@ -32,6 +34,12 @@ function pageSwitch(mode) {
             break;
         case 'rand':
             param = 'random';
+            break;
+        case 'last':
+            param = latest.toString();
+            break;
+        case 'first':
+            param = '1';
             break;
         default:
             return false;
@@ -67,5 +75,15 @@ function createBtnRand() {
     var btn = createBtn('Random', `pageSwitch('${id}')`, id);
     controllerDiv.appendChild(btn);
 }
-
 // Last comic button
+function createBtnLast() {
+    const id = 'last';
+    var btn = createBtn('>|', `pageSwitch('${id}')`, id);
+    controllerDiv.appendChild(btn);
+}
+// First comic button
+function createBtnFirst() {
+    const id = 'first';
+    var btn = createBtn('|<', `pageSwitch('${id}')`, id);
+    controllerDiv.appendChild(btn);
+}
