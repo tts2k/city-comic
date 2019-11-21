@@ -9,7 +9,6 @@ const pool = new Pool({
 
 /* GET JSON object */
 async function getJson(url, params = {}) {
-
   Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
   let headers = {
@@ -38,69 +37,64 @@ async function getLatestComic() {
 /* GET home page. */
 router.get('/', async function(req, res) {
   let data = await getLatestComic();
-
-  if (data.transcript === "")
-    transcript = "There's no official transcript for this comic strip.";
-  else
-    transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
-
-  const client = await pool.connect();
-
-  let update;
   try {
-    update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0');
+    if (data.transcript === "")
+      transcript = "There's no official transcript for this comic strip.";
+    else
+      transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
+
+    const client = await pool.connect();
+
+    let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0');
+    let rows = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
+    client.release();
+    res.render('index', {
+      title: 'xkcd #' + data.num,
+      comTitle: data.title,
+      id: data.num,
+      latestId: data.num,
+      date: `${data.month}/${data.day}`,
+      imgLink: data.img,
+      viewCount: rows.rows[0].viewcount
+    });
   }
   catch (e) {
     client.release();
     throw new Error(update.message);
   }
-
-  let rows = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
-
-  res.render('index', {
-    title: 'xkcd #' + data.num,
-    comTitle: data.title,
-    id: data.num,
-    latestId: data.num,
-    date: `${data.month}/${data.day}`,
-    imgLink: data.img,
-    viewCount: rows.rows[0].viewcount
-  });
 });
 
 // get comic json from id
 router.get('/:id([0-9]+)', async function(req, res) {
   const id = parseInt(req.params.id);
   const url = new URL('https://xkcd.com/' + id + '/info.0.json');
-
-  var data = {};
   try {
-    data = await getJson(url);
+    let data = await getJson(url);
+    
+    var transcript = '';
+    if (data.transcript === "")
+      transcript = "There's no official transcript for this comic strip.";
+    else
+      transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
+    let latest = await getLatestComic();
+
+    res.render('index', {
+      title: 'xkcd #' + data.num,
+      comTitle: data.title,
+      id: data.num,
+      latestId: latest.num,
+      date: `${data.month}/${data.day}/${data.year}`,
+      imgLink: data.img,
+      transcript: transcript
+    });
   }
-  catch (error) {
+  catch (e) {
     res.render('error', {
       error: {status: 404},
       message: error.message
     });
     return;
-  }
-
-  var transcript = '';
-  if (data.transcript === "")
-    transcript = "There's no official transcript for this comic strip.";
-  else
-    transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
-  let latest = await getLatestComic();
-
-  res.render('index', {
-    title: 'xkcd #' + data.num,
-    comTitle: data.title,
-    id: data.num,
-    latestId: latest.num,
-    date: `${data.month}/${data.day}/${data.year}`,
-    imgLink: data.img,
-    transcript: transcript
-  });
+  } 
 });
 
 // get a random comic trip
