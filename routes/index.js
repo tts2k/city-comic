@@ -77,12 +77,21 @@ router.get('/:id([0-9]+)', async function(req, res) {
       transcript = "There's no official transcript for this comic strip.";
     else
       transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
+
     let latest = await getLatestComic();
 
-    let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", [id]);
-    console.log(query);
+    var pageView = 1;
 
-    client.release();
+    let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", [id]);
+    if (query.rows.length === 0) {
+      let res = await client.query("INSERT INTO viewCount VALUES ($1, $2, $3)", [id, data.title, 1]);
+    }
+    else {
+      let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = $1', [id]);
+      pageView = query.rows[0].viewcount;
+      console.log(query);
+    }
+
     res.render('index', {
       title: 'xkcd #' + data.num,
       comTitle: data.title,
@@ -90,7 +99,8 @@ router.get('/:id([0-9]+)', async function(req, res) {
       latestId: latest.num,
       date: `${data.month}/${data.day}/${data.year}`,
       imgLink: data.img,
-      transcript: transcript
+      transcript: transcript,
+      viewCount: pageView
     });
   }
   catch (e) {
