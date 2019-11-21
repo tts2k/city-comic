@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const fetch = require('node-fetch');
-const { Client } = require('pg');
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL;
   ssl: true
 });
 
@@ -45,9 +45,8 @@ router.get('/', async function(req, res) {
     transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
 
   var pageView = 0;
-  client.connect();
-
-  client.query('SELECT * FROM viewCount', (err, res) =>{
+  const client = await pool.connect();
+  await client.query('SELECT * FROM viewCount', (err, res) =>{
     if (err) throw err;
     pageView = res.rows[0].viewcount;
     client.end();
