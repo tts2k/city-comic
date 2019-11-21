@@ -1,9 +1,9 @@
-/* Main body*/
+/* Global variables */
+var comicId = 0; // ID of current comic
+var latest = 0; // ID of latest comic
+let controllerDiv = document.getElementById('controller'); // Controller div
 
-var comicId = 0;
-var latest = 0;
-let controllerDiv = document.getElementById('controller');
-
+/* Initializing function */
 function init(currentId, latestId) {
     comicId = parseInt(currentId);
     latest = parseInt(latestId);
@@ -14,6 +14,8 @@ function init(currentId, latestId) {
     createBtnLast();
 }
 
+/* Generating buttons */
+// Create a button object with specified parameters and return it
 function createBtn(value, func, id) {
     var btn = document.createElement('input');
     btn.setAttribute('type', 'button');
@@ -52,7 +54,7 @@ function pageSwitch(mode) {
 
 // Previous comic button
 function createBtnPrev() {
-    const id = 'prev'; // Button id
+    const id = 'prev';
     var btn;
     if (comicId - 1 > 0)
         btn = createBtn('<< Prev', `pageSwitch('${id}')`, id);

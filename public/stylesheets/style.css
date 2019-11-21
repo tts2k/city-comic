@@ -1,4 +1,4 @@
-/* Color definitions. Taken from boostrap scheme:  
+/* Color definitions. Taken from boostrap color palette:  
 * https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss
 */
 :root { 
@@ -105,6 +105,7 @@ footer {
   font-size: 11px;
 }
 
+/* Responsive */
 @media only screen and (max-width: 1000px) {
   body {
     padding: 0 0;

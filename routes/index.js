@@ -8,7 +8,7 @@ const pool = new Pool({
   ssl: true
 });
 
-/* GET JSON object */
+/* Get JSON object from the api */
 async function getJson(url, params = {}) {
   Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
@@ -35,11 +35,12 @@ async function getLatestComic() {
   return await getJson(url);
 }
 
-/* GET home page. */
+/* home page. */
 router.get('/', async function(req, res) {
   let data = await getLatestComic();
   const client = await pool.connect();
   try {
+    // Print a message if there's no official transcript
     if (data.transcript === "")
       transcript = "There's no official transcript for this comic strip.";
     else
@@ -72,7 +73,7 @@ router.get('/', async function(req, res) {
   }
 });
 
-// get comic json from id
+/* Get comic from id */
 router.get('/:id([0-9]+)', async function(req, res) {
   const id = parseInt(req.params.id);
   const url = new URL('https://xkcd.com/' + id + '/info.0.json');
@@ -81,6 +82,7 @@ router.get('/:id([0-9]+)', async function(req, res) {
     let data = await getJson(url);
     
     var transcript = '';
+    // Print a message if there's no official transcript
     if (data.transcript === "")
       transcript = "There's no official transcript for this comic strip.";
     else
@@ -90,11 +92,13 @@ router.get('/:id([0-9]+)', async function(req, res) {
 
     var pageView = 1;
 
+    // Get the number of view count for given id
     let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", [id]);
+    // if there's no entry of comic with that id inside the database, insert it
     if (query.rows.length === 0) {
       let res = await client.query("INSERT INTO viewCount VALUES ($1, $2, $3)", [id, data.title, 1]);
     }
-    else {
+    else { // else update view count of that comic
       let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = $1', [id]);
       pageView = query.rows[0].viewcount + 1;
     }
@@ -126,12 +130,12 @@ router.get('/:id([0-9]+)', async function(req, res) {
   }
 });
 
-// get a random comic strip
+// Get a random comic strip
 router.get('/random', async function(req, res) {
   let data = await getLatestComic();
   let latestId = parseInt(data.num);
-  const id = parseInt(Math.random() * latestId) + 1;
-  res.redirect('/' + id);
+  const id = parseInt(Math.random() * latestId) + 1; // Generate a random number between 1 and id of latest comic strip
+  res.redirect('/' + id); // Redirect to page of comic with that id
 });
 
 module.exports = router;
