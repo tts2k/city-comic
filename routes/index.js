@@ -88,8 +88,7 @@ router.get('/:id([0-9]+)', async function(req, res) {
     }
     else {
       let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = $1', [id]);
-      pageView = query.rows[0].viewcount;
-      console.log(query);
+      pageView = query.rows[0].viewcount + 1;
     }
 
     res.render('index', {
