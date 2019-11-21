@@ -46,10 +46,15 @@ router.get('/', async function(req, res) {
 
   var pageView = 0;
   const client = await pool.connect();
+
+  await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0', (err, res) => {
+    if (err) throw err;
+  });
+
   await client.query('SELECT * FROM viewCount', (err, res) =>{
     if (err) throw err;
     pageView = res.rows[0].viewcount;
-    client.end();
+    client.release();
   });
 
   res.render('index', {
