@@ -49,7 +49,7 @@ router.get('/', async function(req, res) {
     let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0');
     let query = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
     res.render('index', {
-      title: 'xkcd #' + data.num + 'Cyber City Comic',
+      title: 'xkcd #' + data.num + ' - Cyber City Comic',
       comTitle: data.title,
       id: data.num,
       latestId: data.num,
