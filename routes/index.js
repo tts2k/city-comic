@@ -44,11 +44,12 @@ router.get('/', async function(req, res) {
   else
     transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
 
+  var pageView = 0;
   client.connect();
 
   client.query('SELECT * FROM viewCount', (err, res) =>{
     if (err) throw err;
-    console.log(res.rows[0].pagename + ": " + res.rows[0].viewcount);
+    pageView = res.rows[0].viewcount;
     client.end();
   });
 
@@ -59,6 +60,7 @@ router.get('/', async function(req, res) {
     latestId: data.num,
     date: `${data.month}/${data.day}`,
     imgLink: data.img,
+    viewCount: pageView
   });
 });
 
