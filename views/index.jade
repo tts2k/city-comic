@@ -5,6 +5,7 @@ block content
     title= title
 
   body(onload='init(#{id}, #{latestId})')
+    //Nav bar
     nav
       #logo
         | Cyber City
@@ -17,11 +18,13 @@ block content
       // Comic
       h2 #{comTitle}
       h3 #{date}
-      img(src='#{imgLink}')
+      img(src='#{imgLink}' alt='xkcd ##{id}')
       #controller
       #transcript
         h3 Transcript
         p(align='center') !{transcript}
-
-
-  // /Wrapper
+    
+    //Footer
+    footer
+      &copy; Copyright 2019 Cyber City Comics
+      #sfc639ykhz8ee3hyjjgg7kjehsx4b2qkbtk

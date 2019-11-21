@@ -81,6 +81,18 @@ input:hover {
   width: 60%;
 }
 
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 8px 0;
+  line-height: 1.4;
+  background-color: var(--color-fg);
+  color: var(--color-bg);
+  font-size: 11px;
+}
+
 @media only screen and (max-width: 1000px) {
   body {
     padding: 0 0;

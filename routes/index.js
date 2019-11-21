@@ -1,8 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const fetch = require('node-fetch');
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
+const { Client } = require('pg');
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
+});
 
 /* GET JSON object */
 async function getJson(url, params = {}) {
@@ -41,13 +44,21 @@ router.get('/', async function(req, res) {
   else
     transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
 
+  client.connect();
+
+  client.query('SELECT * FROM viewCount', (err, res) =>{
+    if (err) throw err;
+    console.log(res.rows[0].pagename + ": " + res.rows[0].viewcount);
+    client.end();
+  });
+
   res.render('index', {
     title: 'xkcd #' + data.num,
     comTitle: data.title,
     id: data.num,
     latestId: data.num,
     date: `${data.month}/${data.day}`,
-    imgLink: data.img
+    imgLink: data.img,
   });
 });
 
