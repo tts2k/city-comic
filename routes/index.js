@@ -44,18 +44,18 @@ router.get('/', async function(req, res) {
   else
     transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
 
-  var pageView = 0;
   const client = await pool.connect();
 
-  await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0', (err, res) => {
-    if (err) throw err;
-  });
-
-  await client.query('SELECT * FROM viewCount', (err, res) =>{
-    if (err) throw err;
-    pageView = res.rows[0].viewcount;
+  let update;
+  try {
+    update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0');
+  }
+  catch (e) {
     client.release();
-  });
+    throw new Error(update.message);
+  }
+
+  let rows = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
 
   res.render('index', {
     title: 'xkcd #' + data.num,
@@ -64,7 +64,7 @@ router.get('/', async function(req, res) {
     latestId: data.num,
     date: `${data.month}/${data.day}`,
     imgLink: data.img,
-    viewCount: pageView
+    viewCount: rows.rows[0].viewcount
   });
 });
 
