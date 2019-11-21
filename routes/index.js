@@ -46,8 +46,7 @@ router.get('/', async function(req, res) {
     const client = await pool.connect();
 
     let update = await client.query('UPDATE viewCount SET viewCount = viewCount + 1 WHERE PageId = 0');
-    let rows = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
-    client.release();
+    let query = await client.query('SELECT * FROM viewCount WHERE PageId = 0');
     res.render('index', {
       title: 'xkcd #' + data.num,
       comTitle: data.title,
@@ -55,12 +54,14 @@ router.get('/', async function(req, res) {
       latestId: data.num,
       date: `${data.month}/${data.day}`,
       imgLink: data.img,
-      viewCount: rows.rows[0].viewcount
+      viewCount: query.rows[0].viewcount
     });
   }
   catch (e) {
-    client.release();
     throw new Error(update.message);
+  }
+  finally {
+    client.release();
   }
 });
 
@@ -78,6 +79,11 @@ router.get('/:id([0-9]+)', async function(req, res) {
       transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
     let latest = await getLatestComic();
 
+    const client = await pool.connect();
+    let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", id);
+    console.log(query);
+
+    client.release();
     res.render('index', {
       title: 'xkcd #' + data.num,
       comTitle: data.title,
@@ -95,6 +101,9 @@ router.get('/:id([0-9]+)', async function(req, res) {
     });
     return;
   } 
+  finally {
+    client.release();
+  }
 });
 
 // get a random comic trip
