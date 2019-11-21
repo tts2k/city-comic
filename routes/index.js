@@ -79,7 +79,7 @@ router.get('/:id([0-9]+)', async function(req, res) {
       transcript = data.transcript.replace(/(?:\r\n|\r|\n)/g, ' <br/> ');
     let latest = await getLatestComic();
 
-    let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", id);
+    let query = await client.query("SELECT * FROM viewCount WHERE PageId = $1", [id]);
     console.log(query);
 
     client.release();
