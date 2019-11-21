@@ -3,6 +3,8 @@ extends layout
 block content
   head
     title= title
+    script(async src="https://www.googletagmanager.com/gtag/js?id=UA-153068245-1")
+
   body(onload='init(#{id}, #{latestId})')
     nav
       #logo

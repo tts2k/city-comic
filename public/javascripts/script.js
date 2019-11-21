@@ -1,3 +1,11 @@
+/* Google Analytics */
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-153068245-1');
+
+/* Main body*/
+
 var comicId = 0;
 var latest = 0;
 let controllerDiv = document.getElementById('controller');
