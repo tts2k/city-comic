@@ -59,14 +59,12 @@ router.get('/', async function(req, res) {
     });
   }
   catch (e) {
-    if (parseInt(e.message) === 404)
-      error = createError(404, "Not found");
-    else
-      error = createError(500, "Internal server error");
-
-    res.render('error', {
-      error: error,
-    });
+    if (e.message === '404')
+      next(createError(404));
+    else {
+      console.trace(e.stack);
+      next(createError(500, 'Internal server error.'));
+    }
   }
   finally {
     client.release();
@@ -74,7 +72,7 @@ router.get('/', async function(req, res) {
 });
 
 /* Get comic from id */
-router.get('/:id([0-9]+)', async function(req, res) {
+router.get('/:id([0-9]+)', async function(req, res, next) {
   const id = parseInt(req.params.id);
   const url = new URL('https://xkcd.com/' + id + '/info.0.json');
   const client = await pool.connect();
@@ -115,15 +113,12 @@ router.get('/:id([0-9]+)', async function(req, res) {
     });
   }
   catch (e) {
-    var error = {};
-    if (parseInt(e.message) === 404)
-      error = createError(404, "Not found");
-    else
-      error = createError(500, "Internal server error");
-
-    res.render('error', {
-      error: error,
-    });
+    if (e.message === '404')
+      next(createError(404));
+    else {
+      console.trace(e.stack);
+      next(createError(500, 'Internal server error.'));
+    }
   } 
   finally {
     client.release();
