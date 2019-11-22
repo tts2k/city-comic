@@ -36,7 +36,7 @@ async function getLatestComic() {
 }
 
 /* home page. */
-router.get('/', async function(req, res) {
+router.get('/', async function(req, res, next) {
   let data = await getLatestComic();
   const client = await pool.connect();
   try {
