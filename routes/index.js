@@ -53,7 +53,7 @@ router.get('/', async function(req, res, next) {
       comTitle: data.title,
       id: data.num,
       latestId: data.num,
-      date: `${data.month}/${data.day}`,
+      date: `${data.month}/${data.day}/${data.year}`,
       imgLink: data.img,
       viewCount: query.rows[0].viewcount
     });
