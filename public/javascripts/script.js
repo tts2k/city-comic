@@ -69,7 +69,7 @@ function createBtnNext() {
     if (comicId + 1 > latest)
         btn = createBtn('Next >>', `pageSwitch('')`, id);
     else 
-        btn = createBtn('Next >>', `pageSwitch('next')`, id);
+        btn = createBtn('Next >>', `pageSwitch('${id}')`, id);
 
     controllerDiv.appendChild(btn);
 }
